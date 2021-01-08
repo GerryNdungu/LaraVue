@@ -5,18 +5,52 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
+
+
 require('./bootstrap');
 
 window.Vue = require('vue');
+import moment from 'moment';
 import { Form, HasError, AlertError } from 'vform';
-
-window.form = Form;
+//V-Form
+window.Form = Form;
 Vue.component(HasError.name, HasError)
 Vue.component(AlertError.name, AlertError)
+
+//Sweet ALerts
+import Swal from 'sweetalert2';
+window.swal = Swal;
+const Toast = swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+})
+window.toast = Toast;
+
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter)
 
+//VUe progress bar
+import VueProgressBar from 'vue-progressbar';
+const options = {
+    color: '#2fec05',
+    failedColor: '#874b4b',
+    thickness: '5px',
+    transition: {
+        speed: '0.2s',
+        opacity: '0.6s',
+        termination: 300
+    },
+    autoRevert: true,
+    location: 'top',
+    inverse: false
+}
+Vue.use(VueProgressBar, options)
+
+//Defines the Path Routes to Components****
 let routes = [
     { path: '/dashboard', component: require('./components/Dashboard.vue')},
     { path: '/profile', component: require('./components/Profile.vue')},
@@ -28,6 +62,18 @@ const router = new VueRouter({
     mode : "history",
     routes // short for `routes: routes`
 })
+
+//Global filter
+Vue.filter('upText', function (text){
+    return text.charAt(0).toUpperCase() + text.slice(1)
+});
+Vue.filter('myDate', function(created){
+   return  moment(created).format('MMMM Do YYYY, h:mm:ss a');
+});
+
+
+//Custom Event
+window.Fire = new Vue();
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
