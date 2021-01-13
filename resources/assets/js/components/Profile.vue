@@ -56,13 +56,13 @@
                 <div class="card">
                     <div class="card-header p-2">
                         <ul class="nav nav-pills">
-                            <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Activity</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Settings</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#activity" data-toggle="tab">Activity</a></li>
+                            <li class="nav-item"><a class="nav-link active" href="#settings" data-toggle="tab">Settings</a></li>
                         </ul>
                     </div><!-- /.card-header -->
                     <div class="card-body">
                         <div class="tab-content">
-                            <div class="active tab-pane" id="activity">
+                            <div class="tab-pane" id="activity">
                                 <!-- Post -->
                                 <div class="post">
                                     <h1>Display User Activity</h1>
@@ -72,7 +72,7 @@
                             </div>
                             <!-- /.tab-pane -->
 
-                            <div class="tab-pane" id="settings">
+                            <div class=" active tab-pane" id="settings">
                                 <form class="form-horizontal">
                                     <div class="form-group row">
                                         <label for="inputName" class="col-sm-2 col-form-label">Name</label>
@@ -96,7 +96,7 @@
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label">Profile Photo</label>
                                         <div class="col-sm-10">
-                                            <input type="file" class="form-control">
+                                            <input @change="uploadPic" type="file" class="form-control" name="photo">
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -108,7 +108,7 @@
 
                                     <div class="form-group row">
                                         <div class="offset-sm-2 col-sm-10">
-                                            <button type="submit" class="btn btn-danger">Update</button>
+                                            <button @click.prevent="updateInfo" type="submit" class="btn btn-danger">Update</button>
                                         </div>
                                     </div>
                                 </form>
@@ -141,6 +141,28 @@ export default {
     },
     mounted() {
         console.log('Component mounted.')
+    },
+    methods :{
+        updateInfo(){
+            this.form.put('api/profile')
+                .then(()=>{
+
+                })
+                .catch(()=>{
+
+                })
+        },
+        uploadPic(e){
+            let file = e.target.files[0];
+            //console.log(file);
+            let reader = new FileReader();
+                reader.onloadend = (file) => {
+                    // console.log('RESULT', reader.result)
+                    this.form.photo = reader.result;
+                }
+
+                reader.readAsDataURL(file);
+        }
     },
     created() {
         axios.get("api/profile")
