@@ -20,6 +20,7 @@ Vue.prototype.$gate = new Gate(window.user);
 window.Form = Form;
 Vue.component(HasError.name, HasError)
 Vue.component(AlertError.name, AlertError)
+Vue.component('pagination', require('laravel-vue-pagination'));
 
 //Sweet ALerts
 import Swal from 'sweetalert2';
@@ -60,6 +61,7 @@ let routes = [
     { path: '/profile', component: require('./components/Profile.vue')},
     { path: '/users', component: require('./components/Users.vue')},
     { path: '/developer', component: require('./components/Developer.vue')},
+    { path: '*', component: require('./components/NotFound.vue')},
 
 ]
 
@@ -110,5 +112,15 @@ Vue.component('example-component', require('./components/ExampleComponent.vue'))
 
 const app = new Vue({
     el: '#app',
-    router
+    router,
+    data:{
+        search:''
+    },
+    methods:{
+        searchit(){
+            Fire.$emit('searching');
+            // console.log("Searching");
+        },
+
+    }
 });

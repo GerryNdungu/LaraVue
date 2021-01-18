@@ -7,6 +7,10 @@
                         <h3 class="card-title">Users Table</h3>
 
                         <div class="card-tools">
+                            <a href="" @click.prevent="printme" target="_blank" class="btn btn-outline-warning">
+                                <i class="fas fa-print fa-fw"></i>
+                                Print
+                            </a>
                             <button class="btn btn-outline-success" @click="newModal">
                                 Add New
                                 <i class="fas fa-user-plus fa-fw"></i>
@@ -27,7 +31,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="user in users" :key="user.id">
+                            <tr v-for="user in users.data" :key="user.id">
                                 <td>{{user.id}}</td>
                                 <td>{{user.name}}</td>
                                 <td>{{ user.email }}</td>
@@ -48,6 +52,9 @@
                         </table>
                     </div>
                     <!-- /.card-body -->
+                    <div class="card-footer">
+                        <pagination :data="users" @pagination-change-page="getResults"></pagination>
+                    </div>
                 </div>
                 <!-- /.card -->
             </div>
@@ -173,7 +180,7 @@ export default {
                 // this.form.get('api/user');
                 axios.get('api/user')
                     .then(
-                        ({data}) => (this.users = data.data)
+                        ({data}) => (this.users = data)
                     );
             }
 
@@ -240,8 +247,32 @@ export default {
             $('#addNewModal').modal('show');
             this.form.fill(user);
         },
+        getResults(page = 1) {
+            axios.get('api/user?page=' + page)
+                .then(response => {
+                    this.users = response.data;
+                });
+        },
+        printme(){
+            window.print();
+        }
     },
     created(){
+
+        Fire.$on('searching',()=>{
+            let query = this.$parent.search;
+            axios.get('api/findUser?q=' + query)
+                .then((data)=>{
+                    this.users = data.data
+                })
+                .catch(()=>{
+                    swal.fire(
+                        'Failed!',
+                        'There was something wrong.',
+                        'error'
+                    )
+                })
+        });
       this.loadUsers();
       Fire.$on(['AfterCreate','AfterDelete','AfterUpdate'],() =>{
           this.loadUsers();
