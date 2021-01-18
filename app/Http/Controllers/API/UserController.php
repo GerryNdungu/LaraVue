@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\User;
+use Illuminate\Auth\Access\Gate;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -21,7 +22,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::latest()->paginate(10);
+//        $this->authorize('isAdmin');
+        if(\Gate::allows('isAdmin') || \Gate::allows('isAuthor')){
+            return User::latest()->paginate(10);
+        }
+
     }
 
     /**
@@ -125,6 +130,8 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('isAdmin');
+
         $user = User::findOrfail($id);
         $user->delete();
         return  ['message' => 'User deleted'];

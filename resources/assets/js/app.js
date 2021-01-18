@@ -10,8 +10,12 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
+import Gate from "./Gate";
 import moment from 'moment';
 import { Form, HasError, AlertError } from 'vform';
+//Gate prototyping
+Vue.prototype.$gate = new Gate(window.user);
+
 //V-Form
 window.Form = Form;
 Vue.component(HasError.name, HasError)
@@ -80,6 +84,13 @@ window.Fire = new Vue();
  * the page. Then, you may begin adding components to this application
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
+
+
+//Not-found component
+Vue.component(
+    'not-found',
+    require('./components/NotFound.vue')
+);
 Vue.component(
     'passport-clients',
     require('../../js/components/passport/Clients.vue')

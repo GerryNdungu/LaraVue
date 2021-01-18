@@ -85,10 +85,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <!-- Sidebar user panel (optional) -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="image">
-                    <img src="./img/user.png" class="img-circle elevation-2" alt="User Image">
+                    <img src="../../../public/img/profile/{{Auth::user()->photo}}" class="img-circle elevation-2" alt="User Image">
                 </div>
                 <div class="info" class="d-block">
                     {{ Auth::user()->name }}
+                    <p>{{Auth::user()->type}}</p>
                 </div>
             </div>
 
@@ -106,6 +107,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </router-link>
                     </li>
 
+                    @can('isAdmin')
                     <li class="nav-item has-treeview menu-close">
                         <a href="#" class="nav-link">
                             <i class="nav-icon fas fa-cogs green"></i>
@@ -132,6 +134,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </p>
                         </router-link>
                     </li>
+                    @endcan
                     <li class="nav-item">
                         <router-link to="/profile" class="nav-link">
                             <i class="nav-icon fas fa-user orange"></i>
@@ -197,6 +200,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
     </footer>
 </div>
 <!-- ./wrapper -->
+<script>
+    @auth
+        window.user = @json(auth()->user())
+    @endauth
+</script>
 
 <!-- REQUIRED SCRIPTS -->
 
