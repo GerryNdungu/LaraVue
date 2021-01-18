@@ -17,7 +17,7 @@
                             <h5 class="widget-user-desc text-right">Web Designer</h5>
                         </div>
                         <div class="widget-user-image">
-                            <img class="img-circle" src="" alt="User Avatar">
+                            <img class="img-circle" :src="getProfilePhoto()" alt="User Avatar">
                         </div>
                         <div class="card-footer">
                             <div class="row">
@@ -152,6 +152,10 @@ export default {
         console.log('Component mounted.')
     },
     methods :{
+        getProfilePhoto(){
+            let photo = (this.form.photo.length > 100) ? this.form.photo : "img/profile/"+this.form.photo;
+            return photo;
+        },
         updateInfo(){
             this.$Progress.start();
             if(this.form.password == ""){
@@ -159,7 +163,7 @@ export default {
             }
             this.form.put('api/profile')
                 .then(()=>{
-
+                    Fire.$emit('AfterDelete')
 
                     this.$Progress.finish();
                 })
@@ -188,11 +192,21 @@ export default {
                     )
                 }
 
-        }
+        },
+        loadUserInfo(){
+            // this.form.get('api/user');
+            axios.get('api/user/')
+                .then(
+                    ({data}) => (this.form = data.data)
+                );
+        },
     },
     created() {
         axios.get("api/profile")
             .then(({data}) => (this.form.fill(data)));
+        Fire.$on(['AfterCreate','AfterDelete','AfterUpdate'],() =>{
+            this.loadUserInfo();
+        });
     }
 }
 </script>

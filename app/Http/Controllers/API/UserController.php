@@ -72,6 +72,12 @@ class UserController extends Controller
 
             $request->merge(['photo' => $name]);
 
+            //checks if file exists in public path and delete it b4 uploading again
+            $userPhoto = public_path('img/profile/').$currentPhoto;
+            if(file_exists($userPhoto)){
+                @unlink($userPhoto);
+            }
+
         }
         if(!empty($request->password)){
             $request->merge(['password' => Hash::make($request['password'])]);
